@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seleção de Coparticipação - Sistema Operadora</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <header class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-4">
+                    <button class="text-gray-600 hover:text-gray-900">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                    <div class="flex items-center space-x-2">
+                        <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                            <span class="text-white font-bold text-sm">O</span>
+                        </div>
+                        <span class="text-xl font-semibold text-gray-800">Operadora</span>
+                    </div>
+                </div>
+                
+                <button id="logoutButton" class="bg-blue-600 text-white px-4 py-2 rounded-md font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 flex items-center space-x-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                    </svg>
+                    <span>Sair</span>
+                </button>
+            </div>
+        </div>
+        <div class="h-1 bg-blue-600"></div>
+    </header>
+
+    <div class="flex min-h-screen">
+        <div class="w-16 bg-gray-100 flex flex-col items-center py-8 space-y-4">
+            <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+            </div>
+            <div class="text-xs text-gray-600 text-center">18</div>
+            
+            <div class="w-0.5 h-8 bg-gray-300"></div>
+            
+            <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+            </div>
+            <div class="text-xs text-gray-600 text-center">Cidade</div>
+            
+            <div class="w-0.5 h-8 bg-gray-300"></div>
+            
+            <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M20 6h-2l-2-2H8L6 6H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/>
+                </svg>
+            </div>
+            <div class="text-xs text-gray-600 text-center">Produto</div>
+            
+            <div class="w-0.5 h-8 bg-gray-300"></div>
+            
+            <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                </svg>
+            </div>
+            <div class="text-xs text-blue-600 text-center">Coparticipação</div>
+        </div>
+
+        <div class="flex-1 p-8">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center mb-12">
+                    <h1 class="text-3xl font-semibold text-gray-800 mb-4 inline-flex items-center">
+                        O cliente deseja com ou sem coparticipação?
+                        <button class="ml-3 text-blue-600 hover:text-blue-800">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </button>
+                    </h1>
+                </div>
+
+                <div class="flex justify-center space-x-8 mb-12">
+                    <button 
+                        id="comCoparticipacao"
+                        class="coparticipacao-option flex flex-col items-center p-8 border-2 border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition duration-200 min-w-[200px]"
+                    >
+                        <div class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mb-4">
+                            <svg class="w-8 h-8 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                            </svg>
+                        </div>
+                        <span class="text-lg font-semibold text-gray-800">Com coparticipação</span>
+                        <div class="w-6 h-6 border-2 border-gray-300 rounded mt-2 coparticipacao-checkbox"></div>
+                    </button>
+
+                    <button 
+                        id="semCoparticipacao"
+                        class="coparticipacao-option flex flex-col items-center p-8 border-2 border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition duration-200 min-w-[200px]"
+                    >
+                        <div class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mb-4">
+                            <svg class="w-8 h-8 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                                <path d="M19.78 2.78L17 5.56l-2.78-2.78L13 4l2.78 2.78L13 9.56l1.22 1.22L17 8.78l2.78 2.78 1.22-1.22L18.22 7l2.78-2.78z" fill="red"/>
+                            </svg>
+                        </div>
+                        <span class="text-lg font-semibold text-gray-800">Sem Coparticipação (Exceto Terapias)</span>
+                        <div class="w-6 h-6 border-2 border-gray-300 rounded mt-2 coparticipacao-checkbox"></div>
+                    </button>
+                </div>
+
+                <div class="flex justify-center space-x-4">
+                    <button 
+                        id="avancarButton"
+                        class="bg-blue-600 text-white px-8 py-3 rounded-md font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-gray-400 disabled:cursor-not-allowed transition duration-200"
+                        disabled
+                    >
+                        AVANÇAR
+                    </button>
+                    
+                    <button 
+                        id="voltarButton"
+                        class="text-blue-600 hover:text-blue-800 font-medium py-3 px-4 transition duration-200"
+                    >
+                        VOLTAR
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="fixed bottom-4 right-4 text-xs text-gray-500">
+        ANS nº 368253 ANS nº 359017
+    </footer>
+
+    <script src="coparticipacao.js"></script>
+</body>
+</html>

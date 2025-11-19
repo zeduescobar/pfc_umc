@@ -1,0 +1,16 @@
+# Dependências para o projeto Sistema Operadora
+# Projeto Acadêmico - Automação de Testes
+
+# Automação de testes
+playwright==1.40.0
+
+# Utilitários
+asyncio
+os
+sys
+time
+
+# Para desenvolvimento
+pytest==7.4.3
+pytest-asyncio==0.21.1
+pytest-cov==4.1.0

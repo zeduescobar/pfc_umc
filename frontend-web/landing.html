@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposal Flow - Soluções Inteligentes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-white">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <img src="Logo_Proposal_FLow_1-removebg-preview.png" alt="Proposal Flow" class="h-16 w-auto mr-3">
+                        <h1 class="text-2xl font-bold text-primary-600">Proposal Flow</h1>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="login.html" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium">Entrar</a>
+                    <a href="register.html" class="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition">Cadastrar</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-r from-primary-600 to-primary-800 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+            <div class="text-center">
+                <div class="flex justify-center mb-6">
+                    <img src="Logo_Proposal_FLow_1-removebg-preview.png" alt="Proposal Flow" class="h-32 md:h-48 w-auto">
+                </div>
+                <h1 class="text-4xl md:text-6xl font-bold mb-6">
+                    Soluções Inteligentes para Operadoras
+                </h1>
+                <p class="text-xl md:text-2xl mb-8 text-primary-100">
+                    Automatize processos, extraia dados e otimize sua operação com IA
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="login.html" class="bg-white text-primary-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">
+                        <i class="fas fa-sign-in-alt mr-2"></i>Começar Agora
+                    </a>
+                    <a href="#features" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary-600 transition">
+                        <i class="fas fa-info-circle mr-2"></i>Saiba Mais
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                    Recursos Principais
+                </h2>
+                <p class="text-xl text-gray-600">
+                    Tecnologia avançada para otimizar seus processos
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- OCR Feature -->
+                <div class="bg-white rounded-lg shadow-md p-8 hover:shadow-lg transition">
+                    <div class="bg-primary-100 p-4 rounded-lg w-16 h-16 flex items-center justify-center mb-6">
+                        <i class="fas fa-file-text text-primary-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">OCR Inteligente</h3>
+                    <p class="text-gray-600 mb-6">
+                        Extraia texto de documentos e imagens automaticamente com alta precisão usando tecnologia de reconhecimento óptico.
+                    </p>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li><i class="fas fa-check text-primary-600 mr-2"></i>Suporte a PDF, JPG, PNG</li>
+                        <li><i class="fas fa-check text-primary-600 mr-2"></i>Processamento em lote</li>
+                        <li><i class="fas fa-check text-primary-600 mr-2"></i>Alta precisão</li>
+                    </ul>
+                </div>
+
+                <!-- Automação Feature -->
+                <div class="bg-white rounded-lg shadow-md p-8 hover:shadow-lg transition">
+                    <div class="bg-primary-100 p-4 rounded-lg w-16 h-16 flex items-center justify-center mb-6">
+                        <i class="fas fa-robot text-primary-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Automação Robótica</h3>
+                    <p class="text-gray-600 mb-6">
+                        Automatize processos repetitivos com Playwright, reduzindo tempo e erros humanos.
+                    </p>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li><i class="fas fa-check text-primary-600 mr-2"></i>Fluxos personalizáveis</li>
+                        <li><i class="fas fa-check text-primary-600 mr-2"></i>Execução programada</li>
+                        <li><i class="fas fa-check text-primary-600 mr-2"></i>Relatórios detalhados</li>
+                    </ul>
+                </div>
+
+                <!-- Dashboard Feature -->
+                <div class="bg-white rounded-lg shadow-md p-8 hover:shadow-lg transition">
+                    <div class="bg-primary-100 p-4 rounded-lg w-16 h-16 flex items-center justify-center mb-6">
+                        <i class="fas fa-chart-line text-primary-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Dashboard Inteligente</h3>
+                    <p class="text-gray-600 mb-6">
+                        Monitore todas as operações em tempo real com métricas e relatórios detalhados.
+                    </p>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li><i class="fas fa-check text-primary-600 mr-2"></i>Métricas em tempo real</li>
+                        <li><i class="fas fa-check text-primary-600 mr-2"></i>Relatórios personalizados</li>
+                        <li><i class="fas fa-check text-primary-600 mr-2"></i>Alertas inteligentes</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+                        Por que escolher nossa solução?
+                    </h2>
+                    <div class="space-y-6">
+                        <div class="flex items-start">
+                            <div class="bg-primary-100 p-2 rounded-lg mr-4">
+                                <i class="fas fa-clock text-primary-600"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-2">Economia de Tempo</h3>
+                                <p class="text-gray-600">Reduza o tempo de processamento em até 80% com automação inteligente.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="bg-primary-100 p-2 rounded-lg mr-4">
+                                <i class="fas fa-shield-alt text-primary-600"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-2">Segurança</h3>
+                                <p class="text-gray-600">Dados protegidos com criptografia de ponta e conformidade com LGPD.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="bg-primary-100 p-2 rounded-lg mr-4">
+                                <i class="fas fa-cogs text-primary-600"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-2">Facilidade de Uso</h3>
+                                <p class="text-gray-600">Interface intuitiva que não requer conhecimento técnico avançado.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gradient-to-r from-primary-500 to-primary-700 rounded-lg p-8 text-white">
+                    <h3 class="text-2xl font-bold mb-6">Resultados Comprovados</h3>
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="text-center">
+                            <div class="text-3xl font-bold mb-2">80%</div>
+                            <div class="text-primary-100">Redução de Tempo</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold mb-2">99%</div>
+                            <div class="text-primary-100">Precisão OCR</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold mb-2">24/7</div>
+                            <div class="text-primary-100">Disponibilidade</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold mb-2">50+</div>
+                            <div class="text-primary-100">Clientes Ativos</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 bg-primary-600">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">
+                Pronto para transformar sua operação?
+            </h2>
+            <p class="text-xl text-primary-100 mb-8">
+                Comece hoje mesmo e veja a diferença em sua produtividade
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="register.html" class="bg-white text-primary-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">
+                    <i class="fas fa-user-plus mr-2"></i>Criar Conta Grátis
+                </a>
+                <a href="login.html" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary-600 transition">
+                    <i class="fas fa-sign-in-alt mr-2"></i>Já tenho conta
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <img src="Logo_Proposal_FLow_1-removebg-preview.png" alt="Proposal Flow" class="h-12 w-auto mb-4">
+                    <p class="text-gray-400">
+                        Soluções inteligentes para otimizar processos e aumentar produtividade.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Recursos</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white transition">OCR Inteligente</a></li>
+                        <li><a href="#" class="hover:text-white transition">Automação Robótica</a></li>
+                        <li><a href="#" class="hover:text-white transition">Dashboard Analytics</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Contato</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><i class="fas fa-envelope mr-2"></i>contato@sistemaoperadora.com</li>
+                        <li><i class="fas fa-phone mr-2"></i>(11) 9999-9999</li>
+                        <li><i class="fas fa-map-marker-alt mr-2"></i>São Paulo, SP</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 Proposal Flow. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/landing.js"></script>
+</body>
+</html>

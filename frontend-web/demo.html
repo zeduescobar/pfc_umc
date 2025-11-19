@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo - Proposal Flow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen flex items-center justify-center py-12 px-4">
+        <div class="max-w-4xl w-full">
+            <div class="text-center mb-12">
+                <h1 class="text-4xl font-bold text-gray-900 mb-4">Demo do Proposal Flow</h1>
+                <p class="text-xl text-gray-600">Explore as funcionalidades do sistema</p>
+            </div>
+
+            <!-- Demo Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+                <!-- Landing Page Demo -->
+                <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
+                    <div class="text-center">
+                        <div class="bg-primary-100 p-4 rounded-lg w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-home text-primary-600 text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Landing Page</h3>
+                        <p class="text-gray-600 mb-4">Página inicial moderna com design responsivo</p>
+                        <a href="landing.html" class="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition">
+                            Ver Demo
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Login Demo -->
+                <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
+                    <div class="text-center">
+                        <div class="bg-primary-100 p-4 rounded-lg w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-sign-in-alt text-primary-600 text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Login</h3>
+                        <p class="text-gray-600 mb-4">Sistema de autenticação seguro</p>
+                        <a href="login.html" class="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition">
+                            Ver Demo
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Cadastro Demo -->
+                <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
+                    <div class="text-center">
+                        <div class="bg-primary-100 p-4 rounded-lg w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-user-plus text-primary-600 text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Cadastro</h3>
+                        <p class="text-gray-600 mb-4">Formulário de registro completo</p>
+                        <a href="register.html" class="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition">
+                            Ver Demo
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Dashboard Demo -->
+                <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
+                    <div class="text-center">
+                        <div class="bg-primary-100 p-4 rounded-lg w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-tachometer-alt text-primary-600 text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Dashboard</h3>
+                        <p class="text-gray-600 mb-4">Painel principal com funcionalidades</p>
+                        <a href="index.html" class="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition">
+                            Ver Demo
+                        </a>
+                    </div>
+                </div>
+
+                <!-- OCR Demo -->
+                <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
+                    <div class="text-center">
+                        <div class="bg-primary-100 p-4 rounded-lg w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-file-text text-primary-600 text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">OCR</h3>
+                        <p class="text-gray-600 mb-4">Reconhecimento óptico de caracteres</p>
+                        <button onclick="demoOcr()" class="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition">
+                            Demo OCR
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Automação Demo -->
+                <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
+                    <div class="text-center">
+                        <div class="bg-primary-100 p-4 rounded-lg w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-robot text-primary-600 text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Automação</h3>
+                        <p class="text-gray-600 mb-4">Processos automatizados</p>
+                        <button onclick="demoAutomation()" class="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition">
+                            Demo Automação
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Credenciais de Demo -->
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">
+                <h3 class="text-lg font-semibold text-blue-800 mb-4">
+                    <i class="fas fa-info-circle mr-2"></i>Credenciais de Demonstração
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <h4 class="font-medium text-blue-700 mb-2">Login</h4>
+                        <p class="text-blue-600"><strong>Usuário:</strong> USUARIOTESTE</p>
+                        <p class="text-blue-600"><strong>Senha:</strong> 123456</p>
+                    </div>
+                    <div>
+                        <h4 class="font-medium text-blue-700 mb-2">Funcionalidades</h4>
+                        <ul class="text-blue-600 space-y-1">
+                            <li>• OCR simulado (3s)</li>
+                            <li>• Automação simulgada (5s)</li>
+                            <li>• Estatísticas em tempo real</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fluxo Completo -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h3 class="text-xl font-semibold text-gray-900 mb-4">
+                    <i class="fas fa-route mr-2"></i>Fluxo Completo de Demonstração
+                </h3>
+                <div class="space-y-4">
+                    <div class="flex items-center p-4 bg-gray-50 rounded-lg">
+                        <div class="bg-primary-100 p-2 rounded-lg mr-4">
+                            <span class="text-primary-600 font-bold">1</span>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-900">Acesse a Landing Page</h4>
+                            <p class="text-gray-600">Explore a página inicial e conheça os recursos</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center p-4 bg-gray-50 rounded-lg">
+                        <div class="bg-primary-100 p-2 rounded-lg mr-4">
+                            <span class="text-primary-600 font-bold">2</span>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-900">Faça Login</h4>
+                            <p class="text-gray-600">Use as credenciais de demonstração</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center p-4 bg-gray-50 rounded-lg">
+                        <div class="bg-primary-100 p-2 rounded-lg mr-4">
+                            <span class="text-primary-600 font-bold">3</span>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-gray-900">Explore o Dashboard</h4>
+                            <p class="text-gray-600">Teste as funcionalidades de OCR e automação</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Demo -->
+    <div id="demoModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 id="demoTitle" class="text-xl font-semibold text-gray-900">Demo</h3>
+                        <button onclick="closeDemo()" class="text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div id="demoContent" class="mb-4">
+                        <!-- Conteúdo será inserido aqui -->
+                    </div>
+                    <button onclick="closeDemo()" class="w-full bg-primary-600 text-white py-2 px-4 rounded-lg hover:bg-primary-700 transition">
+                        Fechar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function demoOcr() {
+            document.getElementById('demoTitle').textContent = 'Demo OCR';
+            document.getElementById('demoContent').innerHTML = `
+                <div class="text-center">
+                    <div class="bg-primary-100 p-4 rounded-lg w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-file-text text-primary-600 text-2xl"></i>
+                    </div>
+                    <h4 class="font-medium text-gray-900 mb-2">Reconhecimento Óptico de Caracteres</h4>
+                    <p class="text-gray-600 mb-4">O sistema pode processar:</p>
+                    <ul class="text-left text-gray-600 space-y-1">
+                        <li>• Arquivos PDF (até 20MB)</li>
+                        <li>• Imagens JPG/PNG (até 5MB)</li>
+                        <li>• Extração de texto automática</li>
+                        <li>• Processamento em lote</li>
+                    </ul>
+                </div>
+            `;
+            document.getElementById('demoModal').classList.remove('hidden');
+        }
+
+        function demoAutomation() {
+            document.getElementById('demoTitle').textContent = 'Demo Automação';
+            document.getElementById('demoContent').innerHTML = `
+                <div class="text-center">
+                    <div class="bg-primary-100 p-4 rounded-lg w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-robot text-primary-600 text-2xl"></i>
+                    </div>
+                    <h4 class="font-medium text-gray-900 mb-2">Automação Robótica</h4>
+                    <p class="text-gray-600 mb-4">O sistema pode executar:</p>
+                    <ul class="text-left text-gray-600 space-y-1">
+                        <li>• Fluxo de vendas automatizado</li>
+                        <li>• Cadastro de clientes</li>
+                        <li>• Processos repetitivos</li>
+                        <li>• Relatórios automáticos</li>
+                    </ul>
+                </div>
+            `;
+            document.getElementById('demoModal').classList.remove('hidden');
+        }
+
+        function closeDemo() {
+            document.getElementById('demoModal').classList.add('hidden');
+        }
+
+        // Fechar modal clicando fora
+        document.getElementById('demoModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeDemo();
+            }
+        });
+    </script>
+</body>
+</html>

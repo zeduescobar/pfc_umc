@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vender - Sistema Operadora</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <header class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-4">
+                    <button class="text-gray-600 hover:text-gray-900">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                    <div class="flex items-center space-x-2">
+                        <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                            <span class="text-white font-bold text-sm">O</span>
+                        </div>
+                        <span class="text-xl font-semibold text-gray-800">Operadora</span>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm text-gray-600">Acessibilidade</span>
+                    <button class="text-gray-600 hover:text-gray-900">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </button>
+                    <div class="flex space-x-1">
+                        <button class="text-gray-600 hover:text-gray-900 text-sm font-medium">A+</button>
+                        <button class="text-gray-600 hover:text-gray-900 text-sm font-medium">A-</button>
+                    </div>
+                    
+                    <button id="logoutButton" class="bg-blue-600 text-white px-4 py-2 rounded-md font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 flex items-center space-x-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                        </svg>
+                        <span>Sair</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="h-1 bg-blue-600"></div>
+    </header>
+
+    <main class="flex items-center justify-center min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8">
+            <div class="flex items-center justify-center space-x-2 mb-8">
+                <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                    <span class="text-white font-bold text-sm">18</span>
+                </div>
+                <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+            </div>
+
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-2 inline-flex items-center">
+                    Selecione a operadora
+                    <button class="ml-2 text-blue-600 hover:text-blue-800">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </button>
+                </h2>
+            </div>
+
+            <div class="space-y-6">
+                <button 
+                    id="operatorSelectButton"
+                    class="w-full p-6 border-2 border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition duration-200 text-left"
+                >
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
+                            <span class="text-white font-bold text-lg">O</span>
+                        </div>
+                        <div>
+                            <div class="text-lg font-semibold text-gray-800">Operadora</div>
+                            
+                        </div>
+                    </div>
+                </button>
+            </div>
+
+            <div class="space-y-4">
+                <button 
+                    id="avancarButton"
+                    class="w-full bg-blue-600 text-white py-3 px-4 rounded-md font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-gray-400 disabled:cursor-not-allowed transition duration-200"
+                    disabled
+                >
+                    AVANÇAR
+                </button>
+                
+                <button 
+                    id="voltarButton"
+                    class="w-full text-gray-600 hover:text-gray-800 font-medium py-2 transition duration-200"
+                >
+                    VOLTAR
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="fixed bottom-4 right-4 text-xs text-gray-500">
+        ANS nº 368253 ANS nº 359017
+    </footer>
+
+    <script src="vender.js"></script>
+</body>
+</html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposal Flow - Dashboard</title>
+    <script>
+        // Redirecionar para a nova dashboard
+        window.location.href = 'dashboard.html';
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="css/custom.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <h1 class="text-2xl font-bold text-primary-600">Proposal Flow</h1>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <!-- Menu do Usuário -->
+                    <div class="relative" id="userMenu">
+                        <button id="userMenuBtn" class="flex items-center space-x-2 text-gray-700 hover:text-primary-600 transition">
+                            <div class="w-8 h-8 bg-primary-600 rounded-full flex items-center justify-center">
+                                <i class="fas fa-user text-white text-sm"></i>
+                            </div>
+                            <span id="userName" class="hidden md:block">Usuário</span>
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </button>
+                        
+                        <!-- Dropdown Menu -->
+                        <div id="userDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border z-50">
+                            <div class="py-1">
+                                <div class="px-4 py-2 border-b">
+                                    <p class="text-sm font-medium text-gray-900" id="userEmail">email@exemplo.com</p>
+                                    <p class="text-xs text-gray-500" id="userRole">Corretor</p>
+                                </div>
+                                
+                                <a href="#" id="profileLink" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-user mr-3"></i>Meu Perfil
+                                </a>
+                                
+                                <a href="#" id="changePasswordLink" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-key mr-3"></i>Alterar Senha
+                                </a>
+                                
+                                <a href="#" id="termsLink" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-file-contract mr-3"></i>Termos de Uso
+                                </a>
+                                
+                                <hr class="my-1">
+                                
+                                <a href="#" id="deleteAccountLink" class="flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                                    <i class="fas fa-trash mr-3"></i>Excluir Conta
+                                </a>
+                                
+                                <a href="#" id="logoutBtn" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-sign-out-alt mr-3"></i>Sair
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto py-6 px-4">
+        <!-- Welcome Section -->
+        <div class="mb-8">
+            <h2 class="text-3xl font-bold text-gray-900">Bem-vindo ao Dashboard</h2>
+            <p class="text-gray-600 mt-2">Gerencie suas operações de forma eficiente</p>
+        </div>
+
+        <!-- Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <!-- OCR Card -->
+            <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition">
+                <div class="flex items-center mb-4">
+                    <div class="bg-primary-100 p-3 rounded-lg">
+                        <i class="fas fa-file-text text-primary-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 ml-4">OCR</h3>
+                </div>
+                <p class="text-gray-600 mb-4">Extraia texto de documentos e imagens automaticamente</p>
+                <button id="ocrBtn" class="w-full bg-primary-600 text-white py-2 px-4 rounded-lg hover:bg-primary-700 transition">
+                    <i class="fas fa-upload mr-2"></i>Realizar OCR
+                </button>
+            </div>
+
+            <!-- Automação Card -->
+            <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition">
+                <div class="flex items-center mb-4">
+                    <div class="bg-primary-100 p-3 rounded-lg">
+                        <i class="fas fa-robot text-primary-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 ml-4">Automação</h3>
+                </div>
+                <p class="text-gray-600 mb-4">Execute processos automatizados com Playwright</p>
+                <button id="automationBtn" class="w-full bg-primary-600 text-white py-2 px-4 rounded-lg hover:bg-primary-700 transition">
+                    <i class="fas fa-play mr-2"></i>Iniciar Automação
+                </button>
+            </div>
+
+            <!-- Estatísticas Card -->
+            <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition">
+                <div class="flex items-center mb-4">
+                    <div class="bg-primary-100 p-3 rounded-lg">
+                        <i class="fas fa-chart-bar text-primary-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 ml-4">Estatísticas</h3>
+                </div>
+                <div class="space-y-2">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Documentos processados:</span>
+                        <span class="font-semibold text-primary-600" data-stat="ocr">0</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Automações executadas:</span>
+                        <span class="font-semibold text-primary-600" data-stat="automation">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h3 class="text-xl font-semibold text-gray-900 mb-4">Atividade Recente</h3>
+            <div class="space-y-3">
+                <div class="flex items-center p-3 bg-gray-50 rounded-lg">
+                    <div class="bg-primary-100 p-2 rounded-lg mr-3">
+                        <i class="fas fa-info-circle text-primary-600"></i>
+                    </div>
+                    <div>
+                        <p class="text-gray-900">Sistema inicializado</p>
+                        <p class="text-sm text-gray-500">Agora</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- OCR Modal -->
+    <div id="ocrModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-semibold text-gray-900">Realizar OCR</h3>
+                        <button id="closeOcrModal" class="text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Selecionar arquivo</label>
+                        <input type="file" id="ocrFile" accept=".pdf,.jpg,.jpeg,.png" class="w-full border border-gray-300 rounded-lg p-2">
+                    </div>
+                    <div class="flex space-x-3">
+                        <button id="processOcr" class="flex-1 bg-primary-600 text-white py-2 px-4 rounded-lg hover:bg-primary-700 transition">
+                            <i class="fas fa-magic mr-2"></i>Processar
+                        </button>
+                        <button id="cancelOcr" class="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400 transition">
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Automação Modal -->
+    <div id="automationModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-semibold text-gray-900">Iniciar Automação</h3>
+                        <button id="closeAutomationModal" class="text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Tipo de automação</label>
+                        <select id="automationType" class="w-full border border-gray-300 rounded-lg p-2">
+                            <option value="vendas">Fluxo de Vendas</option>
+                            <option value="cadastro">Cadastro de Cliente</option>
+                            <option value="processo">Processo Completo</option>
+                        </select>
+                    </div>
+                    <div class="flex space-x-3">
+                        <button id="startAutomation" class="flex-1 bg-primary-600 text-white py-2 px-4 rounded-lg hover:bg-primary-700 transition">
+                            <i class="fas fa-play mr-2"></i>Iniciar
+                        </button>
+                        <button id="cancelAutomation" class="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400 transition">
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen">
+            <div class="bg-white rounded-lg shadow-xl p-6 text-center">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
+                <p class="text-gray-900">Processando...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

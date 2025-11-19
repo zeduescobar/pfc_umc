@@ -1,0 +1,128 @@
+/* Estilos customizados para o sistema de login */
+
+/* Animações suaves para transições */
+* {
+    transition: all 0.2s ease-in-out;
+}
+
+/* Estilo para o modal */
+.modal-backdrop {
+    backdrop-filter: blur(2px);
+}
+
+/* Estilo para botões de opção selecionados */
+.option-button.selected {
+    background-color: #dbeafe;
+    border-color: #3b82f6;
+    color: #1e40af;
+}
+
+.option-button.selected svg {
+    color: #3b82f6;
+}
+
+/* Estilo para campos de input com foco */
+input:focus {
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Estilo para botão desabilitado */
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Estilo para o ícone de olho no campo de senha */
+#togglePassword:hover {
+    transform: scale(1.1);
+}
+
+/* Estilo para o logo */
+.logo-container {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+}
+
+/* Estilo para o header */
+.header-shadow {
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+/* Estilo para o formulário de login */
+.login-form {
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Estilo para o modal */
+.modal-content {
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Estilo para links de recuperação */
+.recovery-link {
+    position: relative;
+}
+
+.recovery-link:hover {
+    text-decoration: underline;
+}
+
+/* Estilo para o footer */
+.footer-text {
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.5px;
+}
+
+/* Responsividade para dispositivos móveis */
+@media (max-width: 640px) {
+    .login-form {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+    
+    .modal-content {
+        margin: 1rem;
+    }
+}
+
+/* Estilo para acessibilidade */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Estilo para modo escuro (opcional) */
+@media (prefers-color-scheme: dark) {
+    .bg-white {
+        background-color: #1f2937;
+    }
+    
+    .text-gray-800 {
+        color: #f9fafb;
+    }
+    
+    .text-gray-700 {
+        color: #e5e7eb;
+    }
+    
+    .text-gray-600 {
+        color: #d1d5db;
+    }
+    
+    .border-gray-300 {
+        border-color: #4b5563;
+    }
+}

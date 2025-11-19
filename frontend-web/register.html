@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - Proposal Flow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-br from-primary-50 to-primary-100 min-h-screen">
+    <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8">
+            <!-- Header -->
+            <div class="text-center">
+                <div class="mx-auto h-16 w-16 bg-primary-600 rounded-full flex items-center justify-center mb-4">
+                    <i class="fas fa-user-plus text-white text-2xl"></i>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900">Criar nova conta</h2>
+                <p class="mt-2 text-sm text-gray-600">
+                    Preencha os dados abaixo para começar
+                </p>
+            </div>
+
+            <!-- Register Form -->
+            <div class="bg-white rounded-lg shadow-xl p-8">
+                <!-- Step 1: Dados Básicos -->
+                <div id="step1" class="space-y-6">
+                    <div class="text-center mb-6">
+                        <div class="w-8 h-8 bg-primary-600 rounded-full flex items-center justify-center mx-auto mb-2">
+                            <span class="text-white font-bold">1</span>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900">Dados Pessoais</h3>
+                        <p class="text-sm text-gray-600">Preencha suas informações</p>
+                    </div>
+                    
+                    <form id="registerForm" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="firstName" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-user mr-2"></i>Nome
+                            </label>
+                            <input 
+                                id="firstName" 
+                                name="firstName" 
+                                type="text" 
+                                required 
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                                placeholder="Seu nome"
+                            >
+                        </div>
+                        <div>
+                            <label for="lastName" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-user mr-2"></i>Sobrenome
+                            </label>
+                            <input 
+                                id="lastName" 
+                                name="lastName" 
+                                type="text" 
+                                required 
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                                placeholder="Seu sobrenome"
+                            >
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-envelope mr-2"></i>E-mail
+                        </label>
+                        <input 
+                            id="email" 
+                            name="email" 
+                            type="email" 
+                            required 
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                            placeholder="seu@email.com"
+                        >
+                    </div>
+
+
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-lock mr-2"></i>Senha
+                        </label>
+                        <div class="relative">
+                            <input 
+                                id="password" 
+                                name="password" 
+                                type="password" 
+                                required 
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent pr-10"
+                                placeholder="Crie uma senha segura"
+                            >
+                            <button 
+                                type="button" 
+                                id="togglePassword" 
+                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                            >
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="mt-1 text-xs text-gray-500">
+                            Mínimo 6 caracteres
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-lock mr-2"></i>Confirmar Senha
+                        </label>
+                        <div class="relative">
+                            <input 
+                                id="confirmPassword" 
+                                name="confirmPassword" 
+                                type="password" 
+                                required 
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent pr-10"
+                                placeholder="Confirme sua senha"
+                            >
+                            <button 
+                                type="button" 
+                                id="toggleConfirmPassword" 
+                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                            >
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="company" class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-building mr-2"></i>Corretora *
+                        </label>
+                        <input 
+                            id="company" 
+                            name="company" 
+                            type="text" 
+                            required
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                            placeholder="Nome da sua corretora"
+                        >
+                    </div>
+
+                    <div class="flex items-center">
+                        <input 
+                            id="terms" 
+                            name="terms" 
+                            type="checkbox" 
+                            required
+                            class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                        >
+                        <label for="terms" class="ml-2 block text-sm text-gray-700">
+                            Aceito os <a href="termos-uso.html" target="_blank" class="text-primary-600 hover:text-primary-500">termos de uso</a> e <a href="termos-uso.html" target="_blank" class="text-primary-600 hover:text-primary-500">política de privacidade</a>
+                        </label>
+                    </div>
+
+                    <button 
+                        type="submit" 
+                        class="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition"
+                    >
+                        <i class="fas fa-user-plus mr-2"></i>
+                        Criar Conta
+                    </button>
+                </form>
+                </div>
+                
+                <!-- Step 2: Verificação por Email -->
+                <div id="step2" class="space-y-6 hidden">
+                    <div class="text-center mb-6">
+                        <div class="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-2">
+                            <span class="text-white font-bold">2</span>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900">Verificação por Email</h3>
+                        <p class="text-sm text-gray-600">Digite o código enviado para seu email</p>
+                    </div>
+                    
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                        <div class="flex items-center">
+                            <i class="fas fa-info-circle text-blue-600 mr-2"></i>
+                            <p class="text-blue-800 text-sm">
+                                Enviamos um código de 6 dígitos para <strong id="userEmail"></strong>
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <form id="verificationForm" class="space-y-6">
+                        <div>
+                            <label for="verificationCode" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-key mr-2"></i>Código de Verificação
+                            </label>
+                            <input 
+                                id="verificationCode" 
+                                name="verificationCode" 
+                                type="text" 
+                                required 
+                                maxlength="6"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-center text-2xl tracking-widest"
+                                placeholder="123456"
+                            >
+                            <div class="mt-2 text-xs text-gray-500">
+                                Digite o código de 6 dígitos enviado por email
+                            </div>
+                        </div>
+                        
+                        <div class="flex space-x-3">
+                            <button 
+                                type="button" 
+                                id="backToStep1"
+                                class="flex-1 py-2 px-4 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition"
+                            >
+                                <i class="fas fa-arrow-left mr-2"></i>Voltar
+                            </button>
+                            <button 
+                                type="submit" 
+                                class="flex-1 bg-primary-600 text-white py-2 px-4 rounded-lg hover:bg-primary-700 transition"
+                            >
+                                <i class="fas fa-check mr-2"></i>Verificar e Criar Conta
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Divider -->
+                <div class="mt-6">
+                    <div class="relative">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-gray-300"></div>
+                        </div>
+                        <div class="relative flex justify-center text-sm">
+                            <span class="px-2 bg-white text-gray-500">ou</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Login Link -->
+                <div class="mt-6 text-center">
+                    <p class="text-sm text-gray-600">
+                        Já tem uma conta?
+                        <a href="login.html" class="font-medium text-primary-600 hover:text-primary-500">
+                            Faça login aqui
+                        </a>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Back to Landing -->
+            <div class="text-center">
+                <a href="landing.html" class="text-sm text-gray-600 hover:text-primary-600">
+                    <i class="fas fa-arrow-left mr-2"></i>Voltar para a página inicial
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen">
+            <div class="bg-white rounded-lg shadow-xl p-6 text-center">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
+                <p class="text-gray-900">Criando conta...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
+                <div class="p-6 text-center">
+                    <div class="mx-auto h-16 w-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-check text-green-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Conta criada com sucesso!</h3>
+                    <p class="text-gray-600 mb-4">Você pode fazer login agora.</p>
+                    <button id="goToLogin" class="w-full bg-primary-600 text-white py-2 px-4 rounded-lg hover:bg-primary-700 transition">
+                        Ir para Login
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Modal -->
+    <div id="errorModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
+                <div class="p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-red-100 p-2 rounded-lg mr-3">
+                            <i class="fas fa-exclamation-triangle text-red-600"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900">Erro no Cadastro</h3>
+                    </div>
+                    <p id="errorMessage" class="text-gray-600 mb-4"></p>
+                    <button id="closeErrorModal" class="w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition">
+                        Fechar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/register.js"></script>
+</body>
+</html>
