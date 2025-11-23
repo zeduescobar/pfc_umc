@@ -83,6 +83,29 @@ class AutomationDashboardManager {
             });
         }
 
+        // CEP - Integração com ViaCEP
+        const cepInput = document.getElementById('cep');
+        if (cepInput) {
+            cepInput.addEventListener('blur', () => {
+                const cep = cepInput.value.replace(/\D/g, '');
+                if (cep.length === 8) {
+                    this.buscarCEP(cep);
+                } else if (cep.length > 0) {
+                    this.showError('CEP deve conter 8 dígitos');
+                }
+            });
+
+            // Também busca quando o usuário pressiona Enter
+            cepInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    const cep = cepInput.value.replace(/\D/g, '');
+                    if (cep.length === 8) {
+                        this.buscarCEP(cep);
+                    }
+                }
+            });
+        }
+
         // Estado/Cidade
         const estado = document.getElementById('estado');
         const cidade = document.getElementById('cidade');
@@ -182,6 +205,99 @@ class AutomationDashboardManager {
         });
 
         cidadeSelect.disabled = false;
+    }
+
+    async buscarCEP(cep) {
+        try {
+            // Limpar CEP para ter apenas números
+            const cepLimpo = cep.replace(/\D/g, '');
+            
+            if (cepLimpo.length !== 8) {
+                this.showError('CEP deve conter 8 dígitos');
+                return;
+            }
+
+            // Mostrar loading
+            const cepInput = document.getElementById('cep');
+            if (cepInput) {
+                cepInput.disabled = true;
+                cepInput.classList.add('opacity-50', 'cursor-wait');
+            }
+
+            // Fazer requisição para ViaCEP
+            const response = await fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`);
+            
+            if (!response.ok) {
+                throw new Error('Erro ao buscar CEP');
+            }
+
+            const data = await response.json();
+
+            // Verificar se houve erro na resposta
+            if (data.erro) {
+                this.showError('CEP não encontrado');
+                if (cepInput) {
+                    cepInput.disabled = false;
+                    cepInput.classList.remove('opacity-50', 'cursor-wait');
+                }
+                return;
+            }
+
+            // Preencher estado
+            const estadoSelect = document.getElementById('estado');
+            if (estadoSelect && data.uf) {
+                estadoSelect.value = data.uf;
+                
+                // Disparar evento change para atualizar cidades
+                estadoSelect.dispatchEvent(new Event('change'));
+                
+                // Aguardar um pouco para as cidades serem carregadas
+                setTimeout(() => {
+                    // Preencher cidade (em maiúsculas)
+                    const cidadeSelect = document.getElementById('cidade');
+                    if (cidadeSelect && data.localidade) {
+                        const cidadeMaiuscula = data.localidade.toUpperCase();
+                        
+                        // Procurar a cidade no select
+                        const options = Array.from(cidadeSelect.options);
+                        const cidadeEncontrada = options.find(opt => 
+                            opt.value === cidadeMaiuscula || 
+                            opt.textContent.toUpperCase() === cidadeMaiuscula
+                        );
+                        
+                        if (cidadeEncontrada) {
+                            cidadeSelect.value = cidadeEncontrada.value;
+                        } else {
+                            // Se não encontrar exatamente, criar opção
+                            const option = document.createElement('option');
+                            option.value = cidadeMaiuscula;
+                            option.textContent = cidadeMaiuscula;
+                            cidadeSelect.appendChild(option);
+                            cidadeSelect.value = cidadeMaiuscula;
+                        }
+                    }
+                }, 300);
+            }
+
+            // Remover loading
+            if (cepInput) {
+                cepInput.disabled = false;
+                cepInput.classList.remove('opacity-50', 'cursor-wait');
+            }
+
+            // Mostrar sucesso
+            this.showSuccess(`CEP encontrado: ${data.logradouro || ''} - ${data.localidade}/${data.uf}`);
+
+        } catch (error) {
+            console.error('Erro ao buscar CEP:', error);
+            this.showError('Erro ao buscar CEP. Verifique sua conexão e tente novamente.');
+            
+            const cepInput = document.getElementById('cep');
+            if (cepInput) {
+                cepInput.disabled = false;
+                cepInput.classList.remove('opacity-50', 'cursor-wait');
+            }
+        }
     }
 
     async handleCPFFileSelect(file) {
