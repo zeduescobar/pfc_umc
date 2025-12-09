@@ -199,21 +199,67 @@ class AdminDashboard {
     
     changeUserRole(userId, username, currentRole) {
         document.getElementById('roleChangeUsername').value = username;
-        document.getElementById('newRole').value = currentRole;
+        const newRoleSelect = document.getElementById('newRole');
+        newRoleSelect.value = currentRole;
+        
+        // Armazenar role atual e userId no modal
+        const modal = document.getElementById('roleChangeModal');
+        modal.dataset.userId = userId;
+        modal.dataset.currentRole = currentRole;
+        
+        // Se o usuário é admin, desabilitar a opção "corretor"
+        if (currentRole === 'admin') {
+            const corretorOption = newRoleSelect.querySelector('option[value="corretor"]');
+            if (corretorOption) {
+                corretorOption.disabled = true;
+                corretorOption.style.color = '#9ca3af';
+            }
+            // Desabilitar o select inteiro ou mostrar aviso
+            newRoleSelect.disabled = false; // Mantém habilitado mas a opção corretor fica desabilitada
+        } else {
+            // Se não é admin, habilitar todas as opções
+            const corretorOption = newRoleSelect.querySelector('option[value="corretor"]');
+            if (corretorOption) {
+                corretorOption.disabled = false;
+                corretorOption.style.color = '';
+            }
+        }
+        
         document.getElementById('roleChangeModal').classList.remove('hidden');
-        document.getElementById('roleChangeModal').dataset.userId = userId;
     }
     
     hideRoleModal() {
-        document.getElementById('roleChangeModal').classList.add('hidden');
+        const modal = document.getElementById('roleChangeModal');
+        modal.classList.add('hidden');
+        
+        // Resetar opções do select
+        const newRoleSelect = document.getElementById('newRole');
+        const corretorOption = newRoleSelect.querySelector('option[value="corretor"]');
+        if (corretorOption) {
+            corretorOption.disabled = false;
+            corretorOption.style.color = '';
+        }
+        newRoleSelect.disabled = false;
+        
+        // Limpar dados do modal
+        delete modal.dataset.userId;
+        delete modal.dataset.currentRole;
     }
     
     async saveRoleChange() {
-        const userId = document.getElementById('roleChangeModal').dataset.userId;
+        const modal = document.getElementById('roleChangeModal');
+        const userId = modal.dataset.userId;
+        const currentRole = modal.dataset.currentRole;
         const newRole = document.getElementById('newRole').value;
         
         if (!userId || !newRole) {
             this.showNotification('Dados inválidos', 'error');
+            return;
+        }
+        
+        // Validação: Não permitir mudar admin para corretor
+        if (currentRole === 'admin' && newRole === 'corretor') {
+            this.showNotification('Não é possível alterar a role de um administrador para corretor. Administradores devem permanecer como administradores.', 'error');
             return;
         }
         
@@ -229,18 +275,21 @@ class AdminDashboard {
                 body: JSON.stringify({ role: newRole })
             });
             
+            const data = await response.json();
+            
             if (!response.ok) {
-                throw new Error('Erro ao alterar role');
+                // Exibir mensagem de erro do backend
+                throw new Error(data.error || 'Erro ao alterar role');
             }
             
-            const data = await response.json();
             this.showNotification(data.message, 'success');
             this.hideRoleModal();
             this.loadUsers();
             
         } catch (error) {
             console.error('Erro ao alterar role:', error);
-            this.showNotification('Erro ao alterar role', 'error');
+            // Exibir a mensagem de erro específica do backend
+            this.showNotification(error.message || 'Erro ao alterar role', 'error');
         } finally {
             this.hideLoading();
         }
@@ -338,17 +387,20 @@ class AdminDashboard {
                 }
             });
             
+            const data = await response.json();
+            
             if (!response.ok) {
-                throw new Error('Erro ao anonimizar usuário');
+                // Exibir mensagem de erro do backend
+                throw new Error(data.error || 'Erro ao anonimizar usuário');
             }
             
-            const data = await response.json();
             this.showNotification(data.message, 'success');
             this.loadUsers();
             
         } catch (error) {
             console.error('Erro ao anonimizar usuário:', error);
-            this.showNotification('Erro ao anonimizar usuário', 'error');
+            // Exibir a mensagem de erro específica do backend
+            this.showNotification(error.message || 'Erro ao anonimizar usuário', 'error');
         } finally {
             this.hideLoading();
         }
@@ -375,17 +427,20 @@ class AdminDashboard {
                 }
             });
             
+            const data = await response.json();
+            
             if (!response.ok) {
-                throw new Error('Erro ao excluir usuário');
+                // Exibir mensagem de erro do backend
+                throw new Error(data.error || 'Erro ao excluir usuário');
             }
             
-            const data = await response.json();
             this.showNotification(data.message, 'success');
             this.loadUsers();
             
         } catch (error) {
             console.error('Erro ao excluir usuário:', error);
-            this.showNotification('Erro ao excluir usuário', 'error');
+            // Exibir a mensagem de erro específica do backend
+            this.showNotification(error.message || 'Erro ao excluir usuário', 'error');
         } finally {
             this.hideLoading();
         }

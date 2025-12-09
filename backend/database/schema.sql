@@ -127,8 +127,9 @@ BEGIN
         VALUES (NEW.id, 'UPDATE', TG_TABLE_NAME, NEW.id, row_to_json(OLD), row_to_json(NEW), inet_client_addr(), current_setting('request.headers', true)::json->>'user-agent');
         RETURN NEW;
     ELSIF TG_OP = 'DELETE' THEN
+        -- Usar NULL no user_id porque o usuário já foi deletado (evita foreign key constraint)
         INSERT INTO audit_logs (user_id, action, table_name, record_id, old_values, ip_address, user_agent)
-        VALUES (OLD.id, 'DELETE', TG_TABLE_NAME, OLD.id, row_to_json(OLD), inet_client_addr(), current_setting('request.headers', true)::json->>'user-agent');
+        VALUES (NULL, 'DELETE', TG_TABLE_NAME, OLD.id, row_to_json(OLD), inet_client_addr(), current_setting('request.headers', true)::json->>'user-agent');
         RETURN OLD;
     END IF;
     RETURN NULL;

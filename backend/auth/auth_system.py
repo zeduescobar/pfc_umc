@@ -14,6 +14,7 @@ import os
 import bcrypt
 import jwt
 import psycopg2
+from psycopg2 import IntegrityError
 from psycopg2.extras import RealDictCursor
 from datetime import datetime, timedelta
 from typing import Optional, Dict, List, Tuple
@@ -121,36 +122,53 @@ class AuthSystem:
             conn = self.get_db_connection()
             cursor = conn.cursor()
             
-            # Verificar se usuário já existe
+            # Verificar se usuário já existe (case-insensitive)
             cursor.execute(
-                "SELECT id FROM users WHERE username = %s OR email = %s",
+                "SELECT id, username, email FROM users WHERE LOWER(username) = LOWER(%s) OR LOWER(email) = LOWER(%s)",
                 (username, email)
             )
-            if cursor.fetchone():
-                return False, "Usuário ou email já existe", None
+            existing_user = cursor.fetchone()
+            if existing_user:
+                existing_id, existing_username, existing_email = existing_user
+                if existing_username.lower() == username.lower():
+                    return False, f"O username '{username}' já está em uso. Por favor, escolha outro username.", None
+                if existing_email.lower() == email.lower():
+                    return False, f"O email '{email}' já está em uso. Por favor, use outro email.", None
             
             # Hash da senha
             password_hash = self.hash_password(password)
             
-            # Inserir usuário
-            cursor.execute("""
-                INSERT INTO users (username, email, password_hash, first_name, last_name, 
-                                 company, phone, privacy_accepted, privacy_accepted_at, 
-                                 consent_given, consent_given_at)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                RETURNING id
-            """, (username, email, password_hash, first_name, last_name, 
-                  company, phone, True, datetime.utcnow(), True, datetime.utcnow()))
-            
-            user_id = cursor.fetchone()[0]
-            conn.commit()
-            
-            # Log de auditoria
-            self._log_audit(user_id, 'USER_REGISTER', 'users', user_id, 
-                          None, {'username': username, 'email': email}, 
-                          ip_address, user_agent)
-            
-            return True, "Usuário registrado com sucesso", user_id
+            # Inserir usuário dentro de uma transação
+            try:
+                cursor.execute("""
+                    INSERT INTO users (username, email, password_hash, first_name, last_name, 
+                                     company, phone, privacy_accepted, privacy_accepted_at, 
+                                     consent_given, consent_given_at)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    RETURNING id
+                """, (username, email, password_hash, first_name, last_name, 
+                      company, phone, True, datetime.utcnow(), True, datetime.utcnow()))
+                
+                user_id = cursor.fetchone()[0]
+                conn.commit()
+                
+                # Log de auditoria
+                self._log_audit(user_id, 'USER_REGISTER', 'users', user_id, 
+                              None, {'username': username, 'email': email}, 
+                              ip_address, user_agent)
+                
+                return True, "Usuário registrado com sucesso", user_id
+                
+            except IntegrityError as integrity_error:
+                # Erro de constraint (duplicata)
+                conn.rollback()
+                error_msg = str(integrity_error)
+                if 'username' in error_msg.lower() or 'users_username_key' in error_msg:
+                    return False, f"O username '{username}' já está em uso. Por favor, escolha outro username.", None
+                elif 'email' in error_msg.lower() or 'users_email_key' in error_msg:
+                    return False, f"O email '{email}' já está em uso. Por favor, use outro email.", None
+                else:
+                    return False, f"Erro ao registrar usuário: {error_msg}", None
             
         except Exception as e:
             if conn:
@@ -328,10 +346,42 @@ class AuthSystem:
             if not current_user:
                 return False, "Usuário não encontrado"
             
+            current_role = current_user[0]
+            
+            # PROTEÇÃO CRÍTICA: Não permitir alterar role de administradores (verificação dupla)
+            if current_role and current_role.strip().lower() == 'admin':
+                if new_role and new_role.strip().lower() != 'admin':
+                    return False, "Não é possível alterar a role de um administrador. Administradores devem permanecer como administradores."
+            
+            # Verificação adicional antes de atualizar
+            cursor.execute("SELECT role FROM users WHERE id = %s", (user_id,))
+            role_check = cursor.fetchone()
+            if role_check and role_check[0] and role_check[0].strip().lower() == 'admin':
+                if new_role and new_role.strip().lower() != 'admin':
+                    return False, "Não é possível alterar a role de um administrador. Administradores devem permanecer como administradores."
+                # Se está tentando manter como admin, permitir (mas não faz sentido, mas não bloqueia)
+            
+            # VERIFICAÇÃO FINAL: Garantir que não está alterando admin antes de atualizar
+            cursor.execute("SELECT role FROM users WHERE id = %s", (user_id,))
+            final_check = cursor.fetchone()
+            if final_check and final_check[0] and final_check[0].strip().lower() == 'admin':
+                if new_role and new_role.strip().lower() != 'admin':
+                    return False, "Não é possível alterar a role de um administrador. Administradores devem permanecer como administradores."
+            
             # Atualizar role
             cursor.execute("""
                 UPDATE users SET role = %s, updated_at = %s WHERE id = %s
             """, (new_role, datetime.utcnow(), user_id))
+            
+            # VERIFICAÇÃO PÓS-UPDATE: Garantir que não alterou um admin
+            cursor.execute("SELECT role FROM users WHERE id = %s", (user_id,))
+            post_check = cursor.fetchone()
+            # Se o usuário ainda existe e era admin, garantir que ainda é admin
+            if post_check and current_role and current_role.strip().lower() == 'admin':
+                if post_check[0] and post_check[0].strip().lower() != 'admin':
+                    # Reverter a alteração se conseguiu alterar um admin
+                    conn.rollback()
+                    return False, "Não é possível alterar a role de um administrador. Administradores devem permanecer como administradores."
             
             conn.commit()
             
@@ -425,25 +475,53 @@ class AuthSystem:
             if not admin_user or admin_user[0] != 'admin':
                 return False, "Apenas administradores podem excluir usuários"
             
-            # Verificar se o usuário existe
-            cursor.execute("SELECT username, email FROM users WHERE id = %s", (user_id,))
+            # Verificar se o usuário existe e obter sua role
+            cursor.execute("SELECT username, email, role FROM users WHERE id = %s", (user_id,))
             user_data = cursor.fetchone()
             if not user_data:
                 return False, "Usuário não encontrado"
             
-            # Não permitir auto-exclusão
+            username, email, user_role = user_data
+            
+            # Permitir auto-exclusão apenas se não for admin
             if user_id == admin_user_id:
-                return False, "Você não pode excluir sua própria conta"
+                # Se for admin tentando se excluir, negar
+                if user_role == 'admin':
+                    return False, "Não é possível excluir completamente sua conta de administrador. Use a função de anonimização para remover seus dados pessoais."
+                # Se não for admin, permitir auto-exclusão (continuar o fluxo normalmente)
+            
+            # PROTEÇÃO CRÍTICA: Não permitir excluir administradores (verificação dupla)
+            if user_role and user_role.strip().lower() == 'admin':
+                return False, "Não é possível excluir um administrador. Administradores não podem ser excluídos do sistema."
+            
+            # Verificação adicional: garantir que não é admin antes de prosseguir
+            cursor.execute("SELECT role FROM users WHERE id = %s", (user_id,))
+            role_check = cursor.fetchone()
+            if role_check and role_check[0] and role_check[0].strip().lower() == 'admin':
+                return False, "Não é possível excluir um administrador. Administradores não podem ser excluídos do sistema."
+            
+            # VERIFICAÇÃO FINAL: Garantir que não é admin antes de deletar
+            cursor.execute("SELECT role FROM users WHERE id = %s", (user_id,))
+            final_check = cursor.fetchone()
+            if final_check and final_check[0] and final_check[0].strip().lower() == 'admin':
+                return False, "Não é possível excluir um administrador. Administradores não podem ser excluídos do sistema."
+            
+            # Log de auditoria ANTES de deletar (para evitar conflito com trigger)
+            self._log_audit(admin_user_id, 'USER_DELETE', 'users', user_id, 
+                          {'username': username, 'email': email, 'role': user_role}, None, 
+                          ip_address, user_agent)
+            
+            # VERIFICAÇÃO FINAL ANTES DO DELETE: Última checagem
+            cursor.execute("SELECT role FROM users WHERE id = %s", (user_id,))
+            last_check = cursor.fetchone()
+            if last_check and last_check[0] and last_check[0].strip().lower() == 'admin':
+                return False, "Não é possível excluir um administrador. Administradores não podem ser excluídos do sistema."
             
             # Excluir usuário (cascade irá excluir sessões e logs relacionados)
+            # O trigger do banco também criará um log, mas com user_id NULL
             cursor.execute("DELETE FROM users WHERE id = %s", (user_id,))
             
             conn.commit()
-            
-            # Log de auditoria
-            self._log_audit(admin_user_id, 'USER_DELETE', 'users', user_id, 
-                          {'username': user_data[0], 'email': user_data[1]}, None, 
-                          ip_address, user_agent)
             
             return True, "Usuário excluído com sucesso"
             
@@ -451,6 +529,68 @@ class AuthSystem:
             if conn:
                 conn.rollback()
             return False, f"Erro ao excluir usuário: {str(e)}"
+        finally:
+            if conn:
+                conn.close()
+    
+    def delete_own_account(self, user_id: int, 
+                          ip_address: str = None, user_agent: str = None) -> Tuple[bool, str]:
+        """
+        Permite que um usuário exclua sua própria conta (auto-exclusão)
+        
+        Args:
+            user_id: ID do usuário que está excluindo sua própria conta
+            ip_address: IP do usuário
+            user_agent: User agent do usuário
+            
+        Returns:
+            (sucesso, mensagem)
+        """
+        conn = None
+        try:
+            conn = self.get_db_connection()
+            cursor = conn.cursor()
+            
+            # Verificar se o usuário existe e obter sua role
+            cursor.execute("SELECT username, email, role FROM users WHERE id = %s", (user_id,))
+            user_data = cursor.fetchone()
+            if not user_data:
+                return False, "Usuário não encontrado"
+            
+            username, email, user_role = user_data
+            
+            # PROTEÇÃO: Admins não podem excluir própria conta
+            if user_role and user_role.strip().lower() == 'admin':
+                return False, "Não é possível excluir completamente sua conta de administrador. Use a função de anonimização para remover seus dados pessoais."
+            
+            # Verificação adicional antes de prosseguir
+            cursor.execute("SELECT role FROM users WHERE id = %s", (user_id,))
+            role_check = cursor.fetchone()
+            if role_check and role_check[0] and role_check[0].strip().lower() == 'admin':
+                return False, "Não é possível excluir completamente sua conta de administrador. Use a função de anonimização para remover seus dados pessoais."
+            
+            # Log de auditoria ANTES de deletar (para evitar conflito com trigger)
+            self._log_audit(user_id, 'USER_SELF_DELETE', 'users', user_id, 
+                          {'username': username, 'email': email, 'role': user_role}, None, 
+                          ip_address, user_agent)
+            
+            # VERIFICAÇÃO FINAL: Garantir que não é admin antes de deletar
+            cursor.execute("SELECT role FROM users WHERE id = %s", (user_id,))
+            final_check = cursor.fetchone()
+            if final_check and final_check[0] and final_check[0].strip().lower() == 'admin':
+                return False, "Não é possível excluir completamente sua conta de administrador. Use a função de anonimização para remover seus dados pessoais."
+            
+            # Excluir usuário (cascade irá excluir sessões e logs relacionados)
+            cursor.execute("DELETE FROM users WHERE id = %s", (user_id,))
+            
+            conn.commit()
+            
+            return True, "Conta excluída com sucesso"
+            
+        except Exception as e:
+            if conn:
+                conn.rollback()
+            return False, f"Erro ao excluir conta: {str(e)}"
         finally:
             if conn:
                 conn.close()
@@ -480,22 +620,32 @@ class AuthSystem:
             if not admin_user or admin_user[0] != 'admin':
                 return False, "Apenas administradores podem anonimizar usuários"
             
-            # Verificar se o usuário existe
-            cursor.execute("SELECT username, email, first_name, last_name FROM users WHERE id = %s", (user_id,))
+            # Verificar se o usuário existe e obter sua role
+            cursor.execute("SELECT username, email, first_name, last_name, role FROM users WHERE id = %s", (user_id,))
             user_data = cursor.fetchone()
             if not user_data:
                 return False, "Usuário não encontrado"
+            
+            username, email, first_name, last_name, user_role = user_data
             
             # Não permitir auto-anonimização
             if user_id == admin_user_id:
                 return False, "Você não pode anonimizar sua própria conta"
             
-            # Anonimizar dados pessoais
-            anonymized_username = f"user_anonymized_{user_id}"
-            anonymized_email = f"anonymized_{user_id}@deleted.local"
-            anonymized_first_name = "Usuário"
-            anonymized_last_name = "Anonimizado"
+            # Anonimizar dados pessoais (permitido para todos, incluindo admins)
+            # Para admins, manter a role para rastreabilidade
+            if user_role and user_role.strip().lower() == 'admin':
+                anonymized_username = f"admin_anonymized_{user_id}"
+                anonymized_email = f"admin_anonymized_{user_id}@deleted.local"
+                anonymized_first_name = "Administrador"
+                anonymized_last_name = "Anonimizado"
+            else:
+                anonymized_username = f"user_anonymized_{user_id}"
+                anonymized_email = f"anonymized_{user_id}@deleted.local"
+                anonymized_first_name = "Usuário"
+                anonymized_last_name = "Anonimizado"
             
+            # Anonimizar dados pessoais mas MANTER a role (especialmente para admins)
             cursor.execute("""
                 UPDATE users SET 
                     username = %s,
@@ -506,21 +656,26 @@ class AuthSystem:
                     phone = NULL,
                     is_active = false,
                     updated_at = CURRENT_TIMESTAMP
+                    -- IMPORTANTE: NÃO alterar role, mantém para rastreabilidade
                 WHERE id = %s
             """, (anonymized_username, anonymized_email, anonymized_first_name, 
                   anonymized_last_name, user_id))
             
             conn.commit()
             
-            # Log de auditoria
+            # Log de auditoria (incluir role para admins)
             self._log_audit(admin_user_id, 'USER_ANONYMIZE', 'users', user_id, 
-                          {'username': user_data[0], 'email': user_data[1], 
-                           'first_name': user_data[2], 'last_name': user_data[3]}, 
+                          {'username': username, 'email': email, 
+                           'first_name': first_name, 'last_name': last_name, 'role': user_role}, 
                           {'username': anonymized_username, 'email': anonymized_email,
-                           'first_name': anonymized_first_name, 'last_name': anonymized_last_name}, 
+                           'first_name': anonymized_first_name, 'last_name': anonymized_last_name, 'role': user_role}, 
                           ip_address, user_agent)
             
-            return True, "Usuário anonimizado com sucesso"
+            # Mensagem diferenciada para admins
+            if user_role and user_role.strip().lower() == 'admin':
+                return True, "Dados pessoais do administrador foram anonimizados. Role e rastreabilidade mantidos para compliance."
+            else:
+                return True, "Usuário anonimizado com sucesso"
             
         except Exception as e:
             if conn:
@@ -531,7 +686,7 @@ class AuthSystem:
                 conn.close()
     
     def change_password(self, email, new_password):
-        """Alterar senha do usuário"""
+        """Alterar senha do usuário (para reset de senha)"""
         conn = None
         try:
             conn = self.get_db_connection()
@@ -564,6 +719,53 @@ class AuthSystem:
             if conn:
                 conn.rollback()
             return False, f"Erro ao alterar senha: {e}"
+        finally:
+            if conn:
+                conn.close()
+    
+    def change_password_authenticated(self, user_id: int, current_password: str, new_password: str, 
+                                      ip_address: str = None, user_agent: str = None) -> Tuple[bool, str]:
+        """Alterar senha do usuário logado (verifica senha atual)"""
+        conn = None
+        try:
+            conn = self.get_db_connection()
+            cursor = conn.cursor()
+            
+            # Buscar usuário e senha atual
+            cursor.execute("SELECT id, password_hash, email FROM users WHERE id = %s", (user_id,))
+            user = cursor.fetchone()
+            if not user:
+                return False, "Usuário não encontrado"
+            
+            user_id_db, password_hash, email = user
+            
+            # Verificar senha atual
+            if not self.verify_password(current_password, password_hash):
+                return False, "Senha atual incorreta"
+            
+            # Hash da nova senha
+            new_password_hash = self.hash_password(new_password)
+            
+            # Atualizar senha
+            cursor.execute("""
+                UPDATE users 
+                SET password_hash = %s, updated_at = CURRENT_TIMESTAMP
+                WHERE id = %s
+            """, (new_password_hash, user_id))
+            
+            conn.commit()
+            
+            # Log de auditoria
+            self._log_audit(user_id, 'PASSWORD_CHANGED', 'users', user_id, 
+                          None, {'action': 'password_changed'}, 
+                          ip_address, user_agent)
+            
+            return True, "Senha alterada com sucesso"
+            
+        except Exception as e:
+            if conn:
+                conn.rollback()
+            return False, f"Erro ao alterar senha: {str(e)}"
         finally:
             if conn:
                 conn.close()

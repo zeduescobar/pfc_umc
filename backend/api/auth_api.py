@@ -388,18 +388,60 @@ def confirm_register():
         if len(data['code']) != 6 or not data['code'].isdigit():
             return jsonify({'error': 'Código inválido'}), 400
         
+        # Gerar username único a partir do email (parte antes do @) ou first_name
+        # Se first_name já existir, usar email como base
+        base_username = data['first_name'].strip().lower().replace(' ', '')
+        email_username = data['email'].split('@')[0].lower()
+        
+        # Tentar usar first_name primeiro, se não funcionar, usar email
+        username = base_username
+        max_attempts = 10
+        attempt = 0
+        
         # Registrar usuário
-        success, message, user_id = auth_system.register_user(
-            username=data['first_name'],  # Usar first_name como username
-            email=data['email'],
-            password=data['password'],
-            first_name=data['first_name'],
-            last_name=data['last_name'],
-            company=data['company'],
-            phone=data.get('phone', ''),
-            ip_address=get_client_ip(),
-            user_agent=get_user_agent()
-        )
+        success = False
+        message = ""
+        user_id = None
+        
+        while not success and attempt < max_attempts:
+            if attempt > 0:
+                # Se já tentou, adicionar número ao username
+                username = f"{base_username}{attempt}" if attempt == 1 else f"{base_username}{attempt}"
+            
+            success, message, user_id = auth_system.register_user(
+                username=username,
+                email=data['email'],
+                password=data['password'],
+                first_name=data['first_name'],
+                last_name=data['last_name'],
+                company=data['company'],
+                phone=data.get('phone', ''),
+                ip_address=get_client_ip(),
+                user_agent=get_user_agent()
+            )
+            
+            if success:
+                break
+            
+            # Se o erro não for de username duplicado, parar
+            if 'username' not in message.lower() or 'já está em uso' not in message.lower():
+                break
+            
+            attempt += 1
+        
+        # Se ainda não conseguiu, tentar com email como username
+        if not success and attempt >= max_attempts:
+            success, message, user_id = auth_system.register_user(
+                username=email_username,
+                email=data['email'],
+                password=data['password'],
+                first_name=data['first_name'],
+                last_name=data['last_name'],
+                company=data['company'],
+                phone=data.get('phone', ''),
+                ip_address=get_client_ip(),
+                user_agent=get_user_agent()
+            )
         
         if success:
             return jsonify({
@@ -715,28 +757,26 @@ def verify_code():
 
 # Endpoint removido - duplicado
 
-@app.route('/auth/delete-account', methods=['POST'])
-def delete_account():
-    """Excluir conta com verificação por email"""
+@app.route('/auth/delete-account', methods=['POST', 'DELETE'])
+@require_auth
+def delete_account_authenticated():
+    """Excluir conta do usuário logado (auto-exclusão)"""
     try:
-        data = request.get_json()
-        email = data.get('email')
-        code = data.get('code')
+        user_id = request.current_user['user_id']
         
-        if not all([email, code]):
-            return jsonify({'error': 'Email e código são obrigatórios'}), 400
-        
-        # Verificar código (simulação)
-        if len(code) != 6 or not code.isdigit():
-            return jsonify({'error': 'Código inválido'}), 400
-        
-        # Excluir conta
-        success, message = auth_system.delete_user_by_email(email)
+        # Usar método específico para auto-exclusão
+        # Este método permite que usuários comuns excluam suas próprias contas
+        # Mas bloqueia admins (devido à necessidade de manter logs de auditoria)
+        success, message = auth_system.delete_own_account(
+            user_id=user_id,
+            ip_address=get_client_ip(),
+            user_agent=get_user_agent()
+        )
         
         if success:
             return jsonify({
                 'success': True,
-                'message': 'Conta excluída com sucesso'
+                'message': message
             }), 200
         else:
             return jsonify({'error': message}), 400
@@ -799,11 +839,63 @@ def verify_reset_code():
         return jsonify({'error': f'Erro interno: {str(e)}'}), 500
 
 @app.route('/auth/change-password', methods=['POST'])
+@require_auth
+def change_password_authenticated():
+    """Alterar senha do usuário logado (não requer email, usa token JWT)"""
+    try:
+        # Verificar se usuário está autenticado
+        if not hasattr(request, 'current_user'):
+            return jsonify({'error': 'Usuário não autenticado'}), 401
+        
+        data = request.get_json()
+        
+        if not data:
+            return jsonify({'error': 'Dados não fornecidos'}), 400
+        
+        # Quando logado, só precisa de senha atual e nova senha (NÃO precisa de email)
+        current_password = data.get('current_password')
+        new_password = data.get('new_password')
+        
+        # Se vier email no body, ignorar (não é necessário quando logado)
+        if 'email' in data:
+            # Remover email do data para evitar confusão
+            pass
+        
+        if not current_password or not new_password:
+            return jsonify({'error': 'Senha atual e nova senha são obrigatórias'}), 400
+        
+        if len(new_password) < 6:
+            return jsonify({'error': 'Nova senha deve ter pelo menos 6 caracteres'}), 400
+        
+        # Obter user_id do token JWT (não precisa de email)
+        user_id = request.current_user['user_id']
+        
+        success, message = auth_system.change_password_authenticated(
+            user_id=user_id,
+            current_password=current_password,
+            new_password=new_password,
+            ip_address=get_client_ip(),
+            user_agent=get_user_agent()
+        )
+        
+        if success:
+            return jsonify({
+                'success': True,
+                'message': message
+            }), 200
+        else:
+            return jsonify({'error': message}), 400
+            
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'error': f'Erro interno: {str(e)}'}), 500
+
+@app.route('/auth/reset-password', methods=['POST'])
 def change_password_reset():
-    """Alterar senha com verificação de código"""
+    """Alterar senha com verificação de código (reset de senha)"""
     try:
         data = request.get_json()
-        print(f"DEBUG - Dados recebidos: {data}")
         
         # Verificar campos obrigatórios
         if not data or not isinstance(data, dict):
